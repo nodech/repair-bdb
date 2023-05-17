@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs');
+const bdb = require('bdb');
+
+(async () => {
+  const dir = process.argv[2];
+  const force = process.argv[3] || false;
+
+  if (!dir)
+    help('pass DB_DIRECTORY as an arg.');
+
+  if (!fs.existsSync(dir))
+    help(`"${dir}" not found.`);
+
+  const stat = fs.statSync(dir);
+
+  if (!stat.isDirectory())
+    help(`${dir} is not a directory.`);
+
+  if (!force && !guessIsLDBSync(dir)) {
+    help(`${dir} is not bdb.`);
+  }
+
+  const db = bdb.create(dir);
+
+  try {
+    await db.repair();
+  } catch (e) {
+    console.error('Failed to repair.');
+    throw e;
+  }
+
+  console.log('DONE');
+})().catch((e) => {
+  console.error(e);
+  process.exit(2);
+});
+
+function help(err) {
+  console.error(err);
+  console.error('Usage: repair-bdb DB_DIRECTORY [force]');
+
+  process.exit(1);
+}
+
+function guessIsLDBSync(dir) {
+  const list = fs.readdirSync(dir);
+
+  return list.some((value) => {
+    if (value === 'CURRENT')
+      return true;
+
+    if (value === 'LOG')
+      return true;
+
+    if (value.startsWith('MANIFEST-'))
+      return true;
+
+    return false;
+  });
+}

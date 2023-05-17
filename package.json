@@ -1,0 +1,25 @@
+{
+  "name": "repair-bdb",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodech/repair-bdb.git"
+  },
+  "author": "Nodari Chkuaselidze",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodech/repair-bdb/issues"
+  },
+  "homepage": "https://github.com/nodech/repair-bdb#readme",
+  "dependencies": {
+    "bdb": "^1.4.0"
+  },
+  "bin": {
+    "repair-bdb": "./bin/repair-bdb"
+  }
+}
